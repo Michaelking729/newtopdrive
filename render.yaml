@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: newtopdrive
+    env: static
+    buildCommand: ""
+    startCommand: ""
+    staticPublicPath: /
+    routes:
+      - path: /
+        index: index.html
