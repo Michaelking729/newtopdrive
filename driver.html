@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Drive | Driver Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #0a2e5c;
+            --secondary: #1a5fb4;
+            --accent: #ffcc00;
+            --driver-color: #28a745;
+            --success: #28a745;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            cursor: pointer;
+        }
+        
+        .logo i {
+            color: var(--accent);
+            font-size: 2rem;
+        }
+        
+        .logo span {
+            color: var(--accent);
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .user-menu-btn {
+            background: var(--light);
+            border: none;
+            color: var(--dark);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .user-menu-btn:hover {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .driver-menu-btn {
+            background: var(--driver-color);
+            color: white;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--driver-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        
+        .driver-dashboard {
+            width: 100%;
+            padding: 30px;
+            overflow-y: auto;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .driver-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .driver-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--driver-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .driver-title i {
+            color: var(--driver-color);
+        }
+        
+        .driver-status-toggle {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .status-toggle {
+            position: relative;
+            width: 70px;
+            height: 34px;
+        }
+        
+        .status-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .status-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .status-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .status-slider {
+            background-color: var(--driver-color);
+        }
+        
+        input:checked + .status-slider:before {
+            transform: translateX(36px);
+        }
+        
+        .online-status {
+            background: var(--driver-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .driver-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .driver-stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-left: 5px solid var(--driver-color);
+        }
+        
+        .driver-stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            background: var(--driver-color);
+        }
+        
+        .driver-stat-info h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--driver-color);
+        }
+        
+        .driver-stat-info p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .driver-tabs {
+            display: flex;
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 25px;
+        }
+        
+        .driver-tab {
+            padding: 15px 25px;
+            font-weight: 600;
+            color: #6c757d;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .driver-tab.active {
+            color: var(--driver-color);
+            border-bottom: 3px solid var(--driver-color);
+        }
+        
+        .driver-tab:hover {
+            color: var(--driver-color);
+        }
+        
+        .driver-tab-content {
+            display: none;
+        }
+        
+        .driver-tab-content.active {
+            display: block;
+        }
+        
+        .ride-requests {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .ride-request-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--accent);
+            transition: all 0.3s;
+        }
+        
+        .ride-request-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .request-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--driver-color);
+        }
+        
+        .request-timer {
+            background: var(--danger);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .request-details {
+            margin-bottom: 20px;
+        }
+        
+        .request-location {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .request-location i {
+            color: var(--secondary);
+        }
+        
+        .request-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .accept-request-btn {
+            flex: 1;
+            background: var(--driver-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .accept-request-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .decline-request-btn {
+            flex: 1;
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .decline-request-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+        
+        .active-ride-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .active-ride-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .active-ride-title {
+            font-weight: 700;
+            color: var(--driver-color);
+            font-size: 1.3rem;
+        }
+        
+        .active-ride-status {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .active-ride-details {
+            margin-bottom: 25px;
+        }
+        
+        .rider-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .rider-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .rider-details h4 {
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .rider-details .rating {
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+        
+        .ride-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .ride-action-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .arrived-btn {
+            background: var(--driver-color);
+            color: white;
+        }
+        
+        .start-trip-btn {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .complete-trip-btn {
+            background: var(--success);
+            color: white;
+        }
+        
+        .ride-action-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .earnings-chart {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .chart-placeholder {
+            height: 200px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+        
+        .data-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .table-title {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .table-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .table-controls button {
+            background: var(--light);
+            border: 1px solid #e9ecef;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .table-controls button:hover {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: #f8f9fa;
+        }
+        
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .driver-rating-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .rating-stars {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+        
+        .rating-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--driver-color);
+            margin-bottom: 10px;
+        }
+        
+        .rating-count {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.5; }
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @media (max-width: 1100px) {
+            .driver-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .driver-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .driver-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .driver-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .driver-tab {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-car"></i>
+                    Top<span>Drive</span>
+                </div>
+                <div class="user-menu">
+                    <button class="user-menu-btn driver-menu-btn">
+                        <i class="fas fa-wallet"></i> <span id="wallet-balance">₦42,850</span>
+                    </button>
+                    <div class="user-avatar">EO</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="driver-dashboard" id="driver-dashboard">
+            <div class="driver-header">
+                <div class="driver-title">
+                    <i class="fas fa-car"></i>
+                    Driver Dashboard
+                </div>
+                
+                <div class="driver-status-toggle">
+                    <div class="online-status" id="driver-status-text">Online</div>
+                    <label class="status-toggle">
+                        <input type="checkbox" id="driver-status-toggle" checked>
+                        <span class="status-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="driver-stats">
+                <div class="driver-stat-card">
+                    <div class="driver-stat-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="driver-stat-info">
+                        <h3>₦42,850</h3>
+                        <p>Today's Earnings</p>
+                    </div>
+                </div>
+                <div class="driver-stat-card">
+                    <div class="driver-stat-icon">
+                        <i class="fas fa-road"></i>
+                    </div>
+                    <div class="driver-stat-info">
+                        <h3>18</h3>
+                        <p>Trips Today</p>
+                    </div>
+                </div>
+                <div class="driver-stat-card">
+                    <div class="driver-stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="driver-stat-info">
+                        <h3>6.2h</h3>
+                        <p>Online Today</p>
+                    </div>
+                </div>
+                <div class="driver-stat-card">
+                    <div class="driver-stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="driver-stat-info">
+                        <h3>4.87</h3>
+                        <p>Your Rating</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="driver-tabs">
+                <div class="driver-tab active" data-tab="requests">Live Requests</div>
+                <div class="driver-tab" data-tab="active">Active Ride</div>
+                <div class="driver-tab" data-tab="earnings">Earnings</div>
+                <div class="driver-tab" data-tab="rating">Rating</div>
+            </div>
+            
+            <!-- Live Ride Requests Tab -->
+            <div class="driver-tab-content active" id="requests-tab">
+                <div class="ride-requests" id="ride-requests">
+                    <!-- Ride requests will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Active Ride Tab -->
+            <div class="driver-tab-content" id="active-tab">
+                <div class="active-ride-panel" id="active-ride-panel">
+                    <!-- Active ride will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Earnings Tab -->
+            <div class="driver-tab-content" id="earnings-tab">
+                <div class="earnings-chart">
+                    <h3>Earnings Overview</h3>
+                    <p style="color: #666; margin-bottom: 15px;">Last 7 days in Ijebu-Ode</p>
+                    <div class="chart-placeholder">
+                        <div style="text-align: center;">
+                            <i class="fas fa-chart-line" style="font-size: 3rem; margin-bottom: 15px; color: var(--driver-color);"></i>
+                            <p>Earnings Chart Visualization</p>
+                            <p style="font-size: 0.9rem; margin-top: 10px;">Daily: ₦28,000 - ₦45,000</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="data-table">
+                    <div class="table-header">
+                        <div class="table-title">Recent Earnings</div>
+                        <div class="table-controls">
+                            <button><i class="fas fa-download"></i> Export</button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Trip ID</th>
+                                <th>Time</th>
+                                <th>Pickup</th>
+                                <th>Destination</th>
+                                <th>Fare</th>
+                                <th>Commission</th>
+                                <th>Net Earnings</th>
+                            </tr>
+                        </thead>
+                        <tbody id="earnings-table-body">
+                            <!-- Earnings data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Rating Tab -->
+            <div class="driver-tab-content" id="rating-tab">
+                <div class="driver-rating-card">
+                    <div class="rating-stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <div class="rating-number">4.87</div>
+                    <div class="rating-count">From 1,248 trips</div>
+                </div>
+                
+                <div class="data-table">
+                    <div class="table-header">
+                        <div class="table-title">Recent Reviews</div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rider</th>
+                                <th>Date</th>
+                                <th>Rating</th>
+                                <th>Comment</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reviews-table-body">
+                            <!-- Reviews data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== DRIVER DASHBOARD ====================
+        function initDriverDashboard() {
+            // Driver status toggle
+            const driverStatusToggle = document.getElementById('driver-status-toggle');
+            const driverStatusText = document.getElementById('driver-status-text');
+            
+            driverStatusToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    driverStatusText.textContent = 'Online';
+                    driverStatusText.style.background = '#28a745';
+                    simulateLiveRequests();
+                } else {
+                    driverStatusText.textContent = 'Offline';
+                    driverStatusText.style.background = '#6c757d';
+                    clearInterval(requestInterval);
+                }
+            });
+            
+            // Driver tab switching
+            const driverTabs = document.querySelectorAll('.driver-tab');
+            const driverTabContents = document.querySelectorAll('.driver-tab-content');
+            
+            driverTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    driverTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Show corresponding content
+                    driverTabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+            
+            // Initialize data
+            initDriverData();
+            
+            // Start simulating live requests if driver is online
+            if (driverStatusToggle.checked) {
+                simulateLiveRequests();
+            }
+        }
+        
+        let requestInterval;
+        
+        function simulateLiveRequests() {
+            clearInterval(requestInterval);
+            updateRideRequests();
+            requestInterval = setInterval(updateRideRequests, 8000);
+        }
+        
+        const rideRequestsData = [
+            {
+                id: 1,
+                price: "₦850",
+                timer: "45s",
+                pickup: "Ijebu-Ode Central Market",
+                destination: "Ogun State Polytechnic",
+                distance: "2.1 km",
+                carType: "Toyota Camry"
+            },
+            {
+                id: 2,
+                price: "₦1,200",
+                timer: "32s",
+                pickup: "Awujale Palace",
+                destination: "Itoro Park",
+                distance: "3.5 km",
+                carType: "SUV"
+            },
+            {
+                id: 3,
+                price: "₦650",
+                timer: "18s",
+                pickup: "General Hospital",
+                destination: "Motor Park",
+                distance: "1.8 km",
+                carType: "Toyota Corolla"
+            }
+        ];
+        
+        function updateRideRequests() {
+            const rideRequestsContainer = document.getElementById('ride-requests');
+            rideRequestsContainer.innerHTML = '';
+            
+            rideRequestsData.forEach(request => {
+                const requestElement = document.createElement('div');
+                requestElement.className = 'ride-request-card';
+                requestElement.innerHTML = `
+                    <div class="request-header">
+                        <div class="request-price">${request.price}</div>
+                        <div class="request-timer blink">${request.timer}</div>
+                    </div>
+                    <div class="request-details">
+                        <div class="request-location">
+                            <i class="fas fa-circle" style="color: #1a5fb4;"></i>
+                            <span>${request.pickup}</span>
+                        </div>
+                        <div class="request-location">
+                            <i class="fas fa-flag-checkered" style="color: #28a745;"></i>
+                            <span>${request.destination}</span>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; color: #666;">
+                            <i class="fas fa-road"></i> ${request.distance} • <i class="fas fa-car"></i> ${request.carType}
+                        </div>
+                    </div>
+                    <div class="request-actions">
+                        <button class="accept-request-btn" data-id="${request.id}">
+                            <i class="fas fa-check"></i> Accept Request
+                        </button>
+                        <button class="decline-request-btn" data-id="${request.id}">
+                            <i class="fas fa-times"></i> Decline
+                        </button>
+                    </div>
+                `;
+                
+                rideRequestsContainer.appendChild(requestElement);
+            });
+            
+            // Add event listeners
+            document.querySelectorAll('.accept-request-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const requestId = parseInt(btn.getAttribute('data-id'));
+                    acceptRideRequest(requestId);
+                });
+            });
+            
+            document.querySelectorAll('.decline-request-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const requestId = parseInt(btn.getAttribute('data-id'));
+                    declineRideRequest(requestId);
+                });
+            });
+        }
+        
+        function acceptRideRequest(requestId) {
+            const request = rideRequestsData.find(r => r.id === requestId);
+            alert(`You accepted the ride request!\n\nFrom: ${request.pickup}\nTo: ${request.destination}\nFare: ${request.price}\n\nNavigate to pickup location.`);
+            
+            document.querySelector('.driver-tab[data-tab="active"]').click();
+            
+            document.getElementById('active-ride-panel').innerHTML = `
+                <div class="active-ride-header">
+                    <div class="active-ride-title">Active Ride</div>
+                    <div class="active-ride-status">En Route to Pickup</div>
+                </div>
+                <div class="active-ride-details">
+                    <div class="rider-info">
+                        <div class="rider-avatar">JD</div>
+                        <div class="rider-details">
+                            <h4>John D.</h4>
+                            <div class="rating">
+                                <i class="fas fa-star"></i> 4.8
+                            </div>
+                            <div class="phone">0803 123 4567</div>
+                        </div>
+                    </div>
+                    <div class="request-location">
+                        <i class="fas fa-circle" style="color: #1a5fb4;"></i>
+                        <span><strong>Pickup:</strong> ${request.pickup}</span>
+                    </div>
+                    <div class="request-location">
+                        <i class="fas fa-flag-checkered" style="color: #28a745;"></i>
+                        <span><strong>Destination:</strong> ${request.destination}</span>
+                    </div>
+                    <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Fare:</span>
+                            <span style="font-weight: 700; font-size: 1.2rem;">${request.price}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                            <span>Distance:</span>
+                            <span>${request.distance}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="ride-actions">
+                    <button class="ride-action-btn arrived-btn" id="arrived-btn">
+                        <i class="fas fa-check-circle"></i> Arrived at Pickup
+                    </button>
+                    <button class="ride-action-btn start-trip-btn" id="start-trip-btn" style="display: none;">
+                        <i class="fas fa-play-circle"></i> Start Trip
+                    </button>
+                    <button class="ride-action-btn complete-trip-btn" id="complete-trip-btn" style="display: none;">
+                        <i class="fas fa-flag-checkered"></i> Complete Trip
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('arrived-btn').addEventListener('click', () => {
+                document.getElementById('arrived-btn').style.display = 'none';
+                document.getElementById('start-trip-btn').style.display = 'block';
+                document.querySelector('.active-ride-status').textContent = 'Ready for Trip';
+                alert("You've arrived at the pickup location. Please start the trip when the rider is ready.");
+            });
+            
+            document.getElementById('start-trip-btn').addEventListener('click', () => {
+                document.getElementById('start-trip-btn').style.display = 'none';
+                document.getElementById('complete-trip-btn').style.display = 'block';
+                document.querySelector('.active-ride-status').textContent = 'On Trip';
+                alert("Trip started! Please drive safely to the destination.");
+            });
+            
+            document.getElementById('complete-trip-btn').addEventListener('click', () => {
+                alert(`Trip completed successfully!\n\nFare: ${request.price}\nEarnings: ₦${Math.floor(parseInt(request.price.replace('₦', '').replace(',', '')) * 0.8).toLocaleString()}\n\nThank you for driving with Top Drive!`);
+                document.getElementById('active-ride-panel').innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <i class="fas fa-car" style="font-size: 3rem; color: #28a745; margin-bottom: 20px;"></i>
+                        <h3 style="color: #28a745; margin-bottom: 15px;">No Active Ride</h3>
+                        <p style="color: #666;">You're currently online and ready for new ride requests.</p>
+                        <button class="accept-request-btn" style="margin-top: 20px; max-width: 300px; margin-left: auto; margin-right: auto;" onclick="document.querySelector('.driver-tab[data-tab=\"requests\"]').click()">
+                            <i class="fas fa-bell"></i> View Live Requests
+                        </button>
+                    </div>
+                `;
+            });
+        }
+        
+        function declineRideRequest(requestId) {
+            const request = rideRequestsData.find(r => r.id === requestId);
+            alert(`You declined the ride request from ${request.pickup} to ${request.destination}`);
+        }
+        
+        function initDriverData() {
+            const earningsData = [
+                {id: "TRIP-001", time: "09:15 AM", pickup: "Central Market", destination: "Ogun Poly", fare: "₦850", commission: "₦170", earnings: "₦680"},
+                {id: "TRIP-002", time: "10:30 AM", pickup: "Awujale Palace", destination: "Itoro Park", fare: "₦1,200", commission: "₦240", earnings: "₦960"},
+                {id: "TRIP-003", time: "11:45 AM", pickup: "General Hospital", destination: "Motor Park", fare: "₦650", commission: "₦130", earnings: "₦520"},
+                {id: "TRIP-004", time: "01:20 PM", pickup: "Stadium", destination: "Odogbolu", fare: "₦950", commission: "₦190", earnings: "₦760"},
+                {id: "TRIP-005", time: "02:50 PM", pickup: "Motor Park", destination: "Central Market", fare: "₦750", commission: "₦150", earnings: "₦600"}
+            ];
+            
+            const earningsTableBody = document.getElementById('earnings-table-body');
+            earningsData.forEach(earning => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${earning.id}</td>
+                    <td>${earning.time}</td>
+                    <td>${earning.pickup}</td>
+                    <td>${earning.destination}</td>
+                    <td>${earning.fare}</td>
+                    <td>${earning.commission}</td>
+                    <td style="font-weight: 700; color: #28a745;">${earning.earnings}</td>
+                `;
+                earningsTableBody.appendChild(row);
+            });
+            
+            const reviewsData = [
+                {rider: "John D.", date: "2023-10-15", rating: 5, comment: "Great driver, very professional!"},
+                {rider: "Sarah J.", date: "2023-10-14", rating: 5, comment: "Safe driver, clean car"},
+                {rider: "David B.", date: "2023-10-13", rating: 4, comment: "Good service, arrived quickly"},
+                {rider: "Lisa W.", date: "2023-10-12", rating: 5, comment: "Excellent driver, highly recommend"},
+                {rider: "Michael C.", date: "2023-10-11", rating: 5, comment: "Very polite and helpful"}
+            ];
+            
+            const reviewsTableBody = document.getElementById('reviews-table-body');
+            reviewsData.forEach(review => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${review.rider}</td>
+                    <td>${review.date}</td>
+                    <td>
+                        <div style="color: #ffcc00;">
+                            ${'★'.repeat(review.rating)}${review.rating < 5 ? '☆'.repeat(5-review.rating) : ''}
+                        </div>
+                    </td>
+                    <td>${review.comment}</td>
+                `;
+                reviewsTableBody.appendChild(row);
+            });
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initDriverDashboard);
+    </script>
+</body>
+</html>
