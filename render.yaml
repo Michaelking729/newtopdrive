@@ -5,6 +5,7 @@ services:
     buildCommand: ""
     startCommand: ""
     staticPublicPath: /
+    publishPath: .
     routes:
       - path: /
         index: index.html
